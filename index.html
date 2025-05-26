@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <title>IT Eksamen oppgave</title>
+  <link rel="stylesheet" href="indexCSS.css" />
+  <style>
+    /* Nullstill margin og padding for alle elementer */
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    /* Canvas-stil */
+    canvas {
+      background: #fffaff;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<p id="playerInfo" style="text-align:center; font-family:Arial;"></p>
+  <!-- Spill-canvas -->
+  <canvas id="myCanvas" width="480" height="320" style="border:1px solid #303036;"></canvas>
+  
+  <br>
+  
+  <!-- Startspill-knapp -->
+  <button id="runButton">Start Game</button>
+  
+  <br>
+
+  <p id="playerInfo"></p>
+
+  <br>
+<button onclick="alert('Hello, \nHow are you?')">Try it</button>
+<br><br>
+
+<button id="slettSpiller">Slett spiller og rekord</button>
+  
+  <!-- Her vises game over og score -->
+  <div id="resultat" style="margin-top: 20px; font-family: Arial;"></div>
+
+  <!-- SQL.js bibliotek fra CDN for sqlite i nettleser -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+  
+  <!-- Hoved-JavaScript, ekstern fil -->
+  <script src="indexJS.js"></script>
+</body>
+</html>
