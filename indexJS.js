@@ -156,7 +156,7 @@ function draw() {
         lagreScore();   // Lagre score i DB
       } else {
         // Reset ball og paddle
-        x = canvas.width / 2;
+        x = canvas.width / 4;
         y = canvas.height - 30;
         dx = 2;
         dy = -2;
