@@ -186,6 +186,7 @@ function startGame() {
     const inputName = prompt("Hva heter du?");
     if (inputName && inputName.trim() !== "") {
       setCookie("playerName", inputName, 30);
+      leggTilSpillerHvisNy(inputName); // Legg til i localStorage
       alert("Lykke til, " + inputName + "!");
     } else {
       alert("Du må skrive inn et navn for å spille.");
@@ -193,10 +194,12 @@ function startGame() {
     }
   } else {
     alert("Velkommen tilbake, " + name + "!");
+    leggTilSpillerHvisNy(name); // Legg til i localStorage hvis mangler
   }
 
   interval = setInterval(draw, 10);
 }
+
 
 
 function setCookie(name, value, days) {
@@ -312,6 +315,19 @@ function nullstillSkjerm() {
   drawScore();
   drawLives();
 }
+function leggTilSpillerHvisNy(name) {
+  let players = JSON.parse(localStorage.getItem("players")) || [];
+
+  // Sjekk om spilleren finnes fra før
+  let existingPlayer = players.find(p => p.name === name);
+
+  if (!existingPlayer) {
+    // Legg til ny spiller
+    players.push({ name: name, highscore: 0, deleted: false });
+    localStorage.setItem("players", JSON.stringify(players));
+  }
+}
+
 
 function visSpillere() {
   // Hent listen over spillere fra localStorage, eller start med tom liste
