@@ -3,9 +3,9 @@ const mysql = require('mysql2');
 
 // Opprett forbindelse til MySQL
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'spillbruker',
-  password: 'passord123',
+  host: '172.20.128.23',
+  user: 'emilie',
+  password: 'Happy!178229',
   database: 'spillDB'
 });
 
@@ -27,6 +27,7 @@ connection.query('SELECT * FROM spillere WHERE slettet = FALSE', (err, results) 
 connection.end();
 
 
+// --- spill kode --- \\
 
 // Variabler og oppsett for canvas og spill
 const canvas = document.getElementById("myCanvas");
