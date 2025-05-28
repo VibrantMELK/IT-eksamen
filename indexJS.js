@@ -1,7 +1,7 @@
 
 
 
-// --- Variabler og oppsett for canvas og spill ---
+// Variabler og oppsett for canvas og spill
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -17,6 +17,7 @@ const brickOffsetLeft = 30;
 const paddleHeight = 10;
 const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
+
 
 // Ballens startposisjon og hastighet
 let x = canvas.width / 5;
