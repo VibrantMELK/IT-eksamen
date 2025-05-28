@@ -19,7 +19,7 @@ const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
 // Ballens startposisjon og hastighet
-let x = canvas.width / 2;
+let x = canvas.width / 4;
 let y = canvas.height - 30;
 let dx = 2;
 let dy = -2;
