@@ -1,7 +1,11 @@
-// my sql kode
+const express = require('express');
 const mysql = require('mysql2');
+const cors = require('cors');
+const app = express();
 
-// Opprett forbindelse til MySQL
+app.use(cors());
+app.use(express.json());
+
 const connection = mysql.createConnection({
   host: '172.20.128.23',
   user: 'emilie',
@@ -9,22 +13,38 @@ const connection = mysql.createConnection({
   database: 'spillDB'
 });
 
-// Koble til
 connection.connect(err => {
   if (err) {
-    return console.error('Feil ved tilkobling:', err.message);
+    console.error('Feil ved tilkobling:', err.message);
+    return;
   }
   console.log('Tilkoblet til MySQL!');
 });
 
-// Eksempel: hente alle spillere
-connection.query('SELECT * FROM spillere WHERE slettet = FALSE', (err, results) => {
-  if (err) throw err;
-  console.log('Aktive spillere:', results);
+// Eksempel: hente spillere
+app.get('/spillere', (req, res) => {
+  connection.query('SELECT * FROM spillere WHERE slettet = FALSE', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    res.json(results);
+  });
 });
 
-// Husk å lukke forbindelsen når ferdig
-connection.end();
+// Starte server
+const port = 3000;
+app.listen(port, () => console.log(`Server kjører på port ${port}`));
+
+// hente data fra databasen
+fetch('http://localhost:3000/spillere')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Spillere fra DB:', data);
+    // Oppdater UI med spillere her...
+  })
+  .catch(err => console.error('Feil ved henting av spillere:', err));
+
 
 
 // --- spill kode --- \\
