@@ -223,38 +223,41 @@ function getCookie(name) {
 }
 
 
+// Registrerer spiller i localStorage hvis ikke allerede registrert
+function leggTilSpillerHvisNy(name) {
+  let players = JSON.parse(localStorage.getItem("players")) || [];
 
+  let existingPlayer = players.find(p => p.name === name);
+  if (!existingPlayer) {
+    players.push({ name: name, highscore: 0, deleted: false });
+    localStorage.setItem("players", JSON.stringify(players));
+  }
+}
+
+
+// Lagre/oppdater highscore for spiller
 function lagreScore() {
-  const playerName = getCookie("playerName");  // Hent spillerens navn fra cookie
+  const playerName = getCookie("playerName");
   if (!playerName) {
-    alert("Ingen spiller registrert."); // Feilmelding hvis ingen spiller er lagret
+    alert("Ingen spiller registrert.");
     return;
   }
 
-  // Hent listen over spillere fra localStorage, eller start med en tom liste
   let players = JSON.parse(localStorage.getItem("players")) || [];
+  let player = players.find(p => p.name === playerName);
 
-  // Finn spiller i listen basert på navn
-  let existingPlayer = players.find(p => p.name === playerName);
-
-  if (existingPlayer) {
-    // Oppdater highscore kun hvis den nye scoren er høyere
-    if (score > existingPlayer.highscore) {
-      existingPlayer.highscore = score;
+  if (player) {
+    if (score > player.highscore) {
+      player.highscore = score;
       alert(`Ny rekord for ${playerName}: ${score} poeng!`);
     } else {
-      alert(`${playerName}, din poengsum er ${score}. Din rekord er ${existingPlayer.highscore}.`);
+      alert(`${playerName}, din poengsum er ${score}. Rekorden din er ${player.highscore}.`);
     }
+    localStorage.setItem("players", JSON.stringify(players));
   } else {
-    // Ny spiller legges til i listen
-    players.push({ name: playerName, highscore: score, deleted: false });
-    alert(`${playerName}, din poengsum er ${score}.`);
+    alert("Fant ikke spiller i systemet.");
   }
-
-  // Lagre den oppdaterte listen tilbake i localStorage
-  localStorage.setItem("players", JSON.stringify(players));
 }
-
 
 function slettSpiller() {
   const playerName = getCookie("playerName");  // Hent spillernavn fra cookie
