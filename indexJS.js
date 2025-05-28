@@ -19,7 +19,7 @@ const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
 // Ballens startposisjon og hastighet
-let x = canvas.width / 4;
+let x = canvas.width / 2;
 let y = canvas.height - 30;
 let dx = 2;
 let dy = -2;
@@ -156,7 +156,7 @@ function draw() {
         lagreScore();   // Lagre score i DB
       } else {
         // Reset ball og paddle
-        x = canvas.width / 4;
+        x = canvas.width / 2;
         y = canvas.height - 30;
         dx = 2;
         dy = -2;
@@ -186,7 +186,6 @@ function startGame() {
     const inputName = prompt("Hva heter du?");
     if (inputName && inputName.trim() !== "") {
       setCookie("playerName", inputName, 30);
-      leggTilSpillerHvisNy(inputName); // Legg til i localStorage
       alert("Lykke til, " + inputName + "!");
     } else {
       alert("Du må skrive inn et navn for å spille.");
@@ -194,12 +193,10 @@ function startGame() {
     }
   } else {
     alert("Velkommen tilbake, " + name + "!");
-    leggTilSpillerHvisNy(name); // Legg til i localStorage hvis mangler
   }
 
   interval = setInterval(draw, 10);
 }
-
 
 
 function setCookie(name, value, days) {
@@ -223,71 +220,25 @@ function getCookie(name) {
 }
 
 
-// Registrerer spiller i localStorage hvis ikke allerede registrert
-function leggTilSpillerHvisNy(name) {
-  let players = JSON.parse(localStorage.getItem("players")) || [];
 
-  let existingPlayer = players.find(p => p.name === name);
-  if (!existingPlayer) {
-    players.push({ name: name, highscore: 0, deleted: false });
-    localStorage.setItem("players", JSON.stringify(players));
-  }
-}
-
-
-// Lagre/oppdater highscore for spiller
-function lagreScore() {
-  const playerName = getCookie("playerName");
-  if (!playerName) {
-    alert("Ingen spiller registrert.");
-    return;
-  }
-
-  let players = JSON.parse(localStorage.getItem("players")) || [];
-  let player = players.find(p => p.name === playerName);
-
-  if (player) {
-    if (score > player.highscore) {
-      player.highscore = score;
-      alert(`Ny rekord for ${playerName}: ${score} poeng!`);
+  function lagreScore() {
+    const highscore = parseInt(getCookie("highscore") || "0");
+    if (score > highscore) {
+      setCookie("highscore", score, 30);
+      alert("Ny rekord! " + score + " poeng.");
     } else {
-      alert(`${playerName}, din poengsum er ${score}. Rekorden din er ${player.highscore}.`);
+      alert("Din poengsum: " + score + ". Rekorden er: " + highscore);
     }
-    localStorage.setItem("players", JSON.stringify(players));
-  } else {
-    alert("Fant ikke spiller i systemet.");
   }
-}
+  
 
 function slettSpiller() {
-  const playerName = getCookie("playerName");  // Hent spillernavn fra cookie
-  if (!playerName) {
-    alert("Ingen spiller registrert.");
-    return;
-  }
-
-  // Hent spillerlisten
-  let players = JSON.parse(localStorage.getItem("players")) || [];
-
-  // Finn spilleren med dette navnet
-  let player = players.find(p => p.name === playerName);
-
-  if (player) {
-    player.deleted = true;  // Marker spilleren som slettet
-    localStorage.setItem("players", JSON.stringify(players));  // Lagre endringene
-    alert(`${playerName} er nå slettet.`);
-  } else {
-    alert("Fant ikke spiller.");
-  }
-
-  // Fjern cookies for spilleren
+  // sett cookie med dato i fortiden for å slette den 
   setCookie("playerName", "", -1);
   setCookie("highscore", "", -1);
-
-  // Nullstill skjermen/spillet
+  alert("Spiller og rekord er slettet!");
   nullstillSkjerm();
 }
-
 
 function nullstillSkjerm() {
   // Tilbakestill spillvariabler
@@ -318,43 +269,5 @@ function nullstillSkjerm() {
   drawScore();
   drawLives();
 }
-function leggTilSpillerHvisNy(name) {
-  let players = JSON.parse(localStorage.getItem("players")) || [];
-
-  // Sjekk om spilleren finnes fra før
-  let existingPlayer = players.find(p => p.name === name);
-
-  if (!existingPlayer) {
-    // Legg til ny spiller
-    players.push({ name: name, highscore: 0, deleted: false });
-    localStorage.setItem("players", JSON.stringify(players));
-  }
-}
-
-
-function visSpillere() {
-  // Hent listen over spillere fra localStorage, eller start med tom liste
-  let players = JSON.parse(localStorage.getItem("players")) || [];
-
-  // Filtrer ut spillere som ikke er slettet (deleted: false)
-  let aktiveSpillere = players.filter(p => !p.deleted);
-
-  if (aktiveSpillere.length === 0) {
-    alert("Ingen aktive spillere funnet.");
-    return;
-  }
-
-  // Lag en fin tekst med alle aktive spillere og deres highscores
-  let melding = "Spillere og highscores:\n";
-  aktiveSpillere.forEach(p => {
-    melding += `${p.name}: ${p.highscore} poeng\n`;
-  });
-
-  // Vis listen som en alert
-  alert(melding);
-}
-
 
 document.getElementById("slettSpiller").addEventListener("click", slettSpiller);
-
-document.getElementById("visSpillere").addEventListener("click", visSpillere);
