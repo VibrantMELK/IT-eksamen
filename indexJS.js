@@ -1,3 +1,30 @@
+// my sql kode
+const mysql = require('mysql2');
+
+// Opprett forbindelse til MySQL
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'spillbruker',
+  password: 'passord123',
+  database: 'spillDB'
+});
+
+// Koble til
+connection.connect(err => {
+  if (err) {
+    return console.error('Feil ved tilkobling:', err.message);
+  }
+  console.log('Tilkoblet til MySQL!');
+});
+
+// Eksempel: hente alle spillere
+connection.query('SELECT * FROM spillere WHERE slettet = FALSE', (err, results) => {
+  if (err) throw err;
+  console.log('Aktive spillere:', results);
+});
+
+// Husk å lukke forbindelsen når ferdig
+connection.end();
 
 
 
